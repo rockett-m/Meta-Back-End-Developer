@@ -1,0 +1,52 @@
+<!-- action needs relative url (suffix) or file name -->
+<form action="/signup" method="POST">
+    <br>
+    <!-- plaintext url -->
+    <!-- text field only for single line input -->
+    <label for="username">Username:</label>
+    <input type="text" name="username" id="username" />
+    <br><br>
+
+    <!-- email addr type -->
+    <label for="email">Email Address:</label>
+    <input type="email" name="email" id="email" />
+    <br><br>
+
+    <!-- age -->
+    <label for="age">Age:</label>
+    <input type="number" name="age" id="age" />
+    <br><br>
+
+    <!-- password (html shows dots instead of pw -->
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" />
+    <br><br>
+
+    <!-- face photo -->
+    <label for ="self_photo">photo of self</label><br>
+    <input type="file" name="self_photo" id="self_photo" />
+    <br><br>
+
+    <!-- checkbox -->
+    <input type="checkbox" name="opt_in" id="opt_in" />
+    <label for="opt_in">Opt in to model training?</label>
+    <br><br>
+
+    <!-- multiline text -->
+    <label for="thoughts">Any thoughts?</label>
+    <br><br>
+    <textarea name="multiline" id="thoughts" rows="5"></textarea>
+    <br><br>
+
+    <!-- dropdown selection -->
+    <label for="dropdown">How was this UI?</label>
+    <select name="choice">
+        <option value="meh">Meh</option>
+        <option value="bad">Bad</option>
+        <option value="horrible">Horrible</option>
+    </select>
+    <br><br>
+
+    <!-- submit button - send POST method -->
+    <input type="submit" value="Submit" />
+</form>

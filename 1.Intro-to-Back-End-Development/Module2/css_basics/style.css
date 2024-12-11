@@ -1,0 +1,130 @@
+/* css will use most specific (least greedy rule per element) */
+/* so header1 purple even though blanket h1 rule for blue */
+h1 {
+    color: blue;
+    /* border:
+    padding:
+    collapse-border: */
+}
+/* create rule */
+/* declaration block inside { } */
+/* \/ selector */
+#header1 {
+    color: purple;
+}
+
+/* part before the brackets like h1 is called the selector */
+/* selector, code block, declaration -> css rule */
+/* the > goes only 1 depth level */
+#body_text > h2 {
+    color: green;
+}
+
+/* selector(id) > child */
+#body_text h3 {
+    color: teal;
+}
+
+/* # prefix is id selector, p is tag selector */
+p {
+    color: maroon;
+    border: 1px;
+}
+
+/* class */
+.navigation {
+    color: magenta;
+    margin: 2px;
+}
+
+/* nested div - div - h3 */
+/* notice how this overrides '#body_text h3' teal */
+#body_text div h3 {
+    color: red;
+}
+
+/* turn hyperlink navy when cursor above it */
+a:hover {
+    color: navy;
+}
+
+/* span style="color:yellow" in html file for partial color */
+
+/* can reference a color 5 ways in css */
+/* rgb value
+rgba value
+hsl value - hue sat lightness
+hex value #FFAA00
+predefined color names */
+
+/* p { */
+    /* color: rgb(255, 0, 0); */
+    /* 0.0 <= opacity <= 1.0 */
+    /* color: rgba(255, 0, 0, 0.6); */
+    /* color: hsl(0, 100%, 50%); */
+/* } */
+
+/* colors
+black, silver, gray, white, maroon, red, purple, fuchsia
+green, lime, olive, yellow, navy, blue, teal, aqua */
+
+
+p {
+    font-family: "Palatino Linotype", monospace;
+    font-size: 14px;
+    /* text-transform: uppercase; */
+    /* text-decoration: underline; */
+    /* text-decoration: underline purple solid 5px; */
+    /* text-decoration: line-through; */
+}
+
+/* text-decoration-style
+solid, double, dotted, dashed, wavy
+requires text-decoration to be set */
+
+/* box model
+margin
+border
+padding
+content */
+
+/* document flow */
+/* block
+div, form, h1...h6
+full width of page */
+
+/* inline
+a, img, input, label, b, i, em, span */
+
+#doc_flow {
+    /* comment this out to be block */
+    /* or remove property so not on same line */
+    display: inline;
+}
+
+p {
+    /* left right center justify */
+    text-align: center;
+}
+
+.parent {
+    /* width: 80%; */
+    border: 2px dotted red;
+    /* padding: 4px; */
+    /* text-align: center; */
+}
+
+/* .child {
+    width: 60%;
+    border: 2px solid blue;
+    padding: 4px;
+    margin-left: auto;
+    margin-right: auto;
+} */
+
+.child {
+    float: right;
+    display: block;
+}
+
+/* link to reference css sheet from html */

@@ -1,0 +1,10 @@
+.DS_Store
+
+*.code-workspace
+
+# tests
+Knowledge\ Check\ - *
+*Module\ Quiz*
+
+# screenshots
+*Screenshot*.png

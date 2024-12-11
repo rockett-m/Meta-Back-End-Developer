@@ -1,0 +1,32 @@
+/* rule 2 done */
+body {
+    background: #E0E0E2;
+}
+/* rule 3 done */
+h1 {
+    color: #721817;
+}
+/* rule 4 done */
+h2 {
+    color: #721817;
+}
+/* rule 5 done */
+.center-text {
+    text-align: center;
+}
+/* rule 6 done */
+#logo {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+/* rule 7 done */
+h2 > span {
+    color: #FA9F42;
+    font-size: 0.75em;
+}
+/* rule 8 done */
+#copyright {
+    padding-top: 12px;
+    font-size: 0.75em;
+}

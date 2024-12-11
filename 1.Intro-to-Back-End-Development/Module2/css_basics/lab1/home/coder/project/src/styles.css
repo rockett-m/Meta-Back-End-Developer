@@ -1,0 +1,23 @@
+/* rule 2 done */
+/* set border of image to 2 pixels wide with solid blue color */
+#photo {
+    border: 2px solid blue;
+}
+
+/* rule 3 done */
+/* for heading h1 of my name set color to blue */
+.my_name {
+    color: blue;
+}
+
+/* rule 4 done */
+/* set all h2 headings to gray */
+h2 {
+    color: gray;
+}
+
+/* rule 5 done */
+/* apply margin of 4 to divider elems */
+div {
+    margin: 4px;
+}
