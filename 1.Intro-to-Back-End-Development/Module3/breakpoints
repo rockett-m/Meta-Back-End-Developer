@@ -1,0 +1,19 @@
+breakpoint         class infix      dimensions
+extra small                           < 576px
+small                  sm            >= 576px
+medium                 md            >= 768px
+large                  lg            >= 992px
+extra large            xl            >= 1200px
+extra extra large      xxl           >= 1400px
+
+# default breakpoint is xxs for bootstrap rules
+
+modifiers
+primary secondary success info
+warning danger light dark
+
+alerts
+primary color - blue
+danger color - red
+
+infix to indicate breakpoint in cs
