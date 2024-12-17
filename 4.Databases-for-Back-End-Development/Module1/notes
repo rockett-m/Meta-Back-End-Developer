@@ -1,0 +1,161 @@
+primary key field - unique ids
+
+foreign key in one table connects to primary key in other table
+
+relational databases - storing tabular structured data
+
+NoSQL databases - flexible structure for storing data
+    document db
+    key value db
+    graph db
+
+DB history
+    1970s-1990s - flat files, hierarchical, network
+    1980s-now - relational
+    1990s-now - object oriented, object relational, web enabled
+
+Structured Query Language (SQL)
+
+relational DBs
+    tables to store data
+    columns for attributes
+    each record - row - usually has attr per data point
+    primary key - unique ID per record (row)
+    foreign key - used for relations between data (link pkeys)
+
+object-oriented DBs
+    entities or classes (instead of tables) with attrs, behaviors
+
+NoSQL DBs
+    speed and flexibility in storing data over relational DBs
+    process unstructured big data from facebook, reddit, google, etc.
+    + higher scale
+    + distributed
+    + lower costs
+    + flexible schema
+    + no complex relationships
+    + can process unstructured, semi-structured data
+
+    types of NoSQL DBs:
+    json - fields, vals (strings, numbers, booleans, arrays, or objects)
+    key value
+    wide col - table, rows, dynamic cols
+    graph - node (info about ppl, places, things), edge (relationships btwn nodes)
+
+----------
+
+Create Read Update Delete (CRUD operations)
+
+Structured Query Language (SQL)
+
+relational DBs
+    MySQL, PostgreSQL, Oracle, Microsoft SQL Server
+
+Database Management System (DBMS) - translates SQL instructions into format DB understands
+
+SQL subsets
+    Data definition language
+    Data manipulation language
+    Data query language
+    Data control language
+
+DDL Commands
+    Create (db)
+    Alter (add new col to table)
+    Drop (remove obj from existing db)
+    Insert (add more data to table)
+    Update (edit existing data in table in db)
+    Delete (one or more rows of table in db)
+
+DQL Select
+    retrieve data from db with certain filters
+
+DCL revoke
+    grant and revoke users' access to data
+
+SQL can work on any OS
+
+see sql_commands.sql
+
+cols hold datatype (string, int, char, date and time, binary, numeric)
+    they describe the data in it
+    FirstName, LastName, ProductID, Price
+
+domain - set of options that an attr can be
+    id can only have ints for example
+    ID / Primary Key must be unique, could be combo of cols
+        if a single col isn't all unique
+
+
+Numeric data types such as INT, TINYINT, BIGINT, FLOAT, REAL.
+Date and time data types such as DATE, TIME, DATETIME.
+Character and string data types such as CHAR, VARCHAR.
+Binary data types such as BINARY, VARBINARY.
+Miscellaneous data types such as:
+    Character Large Object (CLOB) for storing a
+        large block of text in some form of text encoding.
+    Binary Large Object (BLOB) for storing a
+        collection of binary data such as images.
+
+relational db terminology
+    table is known as a relation
+    table row / record known as a tuple
+    schema - structure
+        - name of table or relation
+        - table attrs
+        - their names
+        - data type
+
+primary key
+    field or col in table to uniquely identify a tuple (row) in a relation (table)
+    if no column has all unique vals, can make a composite pkey
+        from multiple cols if they result in unique identifiers
+
+foreign key
+    link tables together through a key column (pkey) of one table
+        which is present in the related table as a foreign key
+
+Integrity Constraints - for all tables in db
+Key Constraints
+    1+ cols or fields that can be used to fetch data from tables (pkey)
+    should be a col or cols in a table that can fetch data for any row
+    key attr or pkey != NULL and not be duplicate for diff rows
+Domain Constraints
+    rules defined for values in each column
+    phone number has to be 10 digits
+    home address cannot be in name field etc
+Referential Integrity Constraints
+    when tables are related via fkey col, referenced col must exist in other table
+    table1 uses student id as pkey, table2 uses student id as fkey <-> and
+    both tables have that identical col present
+
+
+The structure of a database consists of a set of key components. These include:
+    Tables or entities, where the data is stored.
+    Attributes which are details about the table or entity. In other words, attributes describe the table.
+    Fields, which are columns used to capture attributes.
+    A record, which is one row of details about a table or entity.
+    And the primary key, which is a unique value for an entity.
+
+Entity Relationship Diagram (ERD)
+    visual repr of how db will be impl into tables during phys db design
+    using a DBMS like MySQL or Oracle
+
+Logical DB Structure
+    entity instance relationships
+    1 <-> 1
+    1 <-> many
+    many <-> many
+cardinality of relationships
+
+Candidate key attribute
+    any attr that contains a unique val in each row of the table
+
+Composite key attribute
+    key made of 2+ attrs to form a uniq val in each new row
+
+Alternate key
+    candidate key not selected as pkey
+
+Foreign key
+    attr that refs a uniq key in another table
