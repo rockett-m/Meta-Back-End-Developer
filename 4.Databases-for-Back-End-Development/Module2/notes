@@ -1,0 +1,322 @@
+numeric data types
+    int, decimal
+    tinyint (max 255)
+
+
+string data type
+    char -- fixed length
+    varchar -- variable length - up to that length
+
+    char(50) -- fixed to 50 chars of space
+        social security num or phone num
+    varchar(50) -- up to 50 chars of space
+        like names or emails
+
+    tinytext - <256 chars (short paragraphs)
+    text - < 65536 chars (article)
+    mediumtext - 16M chars (book)
+    longtext - 4GB chars
+
+
+constraints
+    NOT NULL -- never left blank
+    DEFAULT -- default val if none specified
+
+-- error if row/record insertion/update doesn't match constrainsts
+CREATE TABLE Customer (
+    customer_id INT NOT NULL,
+    customer_name VARCHAR(255) NOT NULL
+);
+
+-- if no city entered, defaults to 'Barcelona', name must be entered
+CREATE TABLE Player (
+    name VARCHAR(50) NOT NULL,
+    city VARCHAR(30) DEFAULT 'Barcelona'
+);
+
+-- alter table
+ALTER TABLE table_name ADD(
+    col_name DATATYPE
+);
+
+CREATE TABLE invoice(
+    customerName VARCHAR(50) NOT NULL,
+    orderDate DATE NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL NOT NULL
+);
+-- add new goals col to invoice table
+ALTER TABLE invoice ADD(
+    goals INT
+);
+-- remove column
+ALTER TABLE invoice DROP COLUMN orderDate;
+-- change datatype limits
+ALTER TABLE invoice MODIFY customerName VARCHAR(100);
+
+
+-- don't change structure, add new record(s) to table in db
+-- think adding student records to student table
+INSERT INTO table_name (col1_name, col2_name, col3_name)
+VALUES
+(value1, value2, value3),
+(value1, value2, value3),
+(value1, value2, value3);
+
+-- can use this to get current date (populate date type col)
+CURRENT_DATE()
+
+-- all non-numeric values should be in quotes
+
+-- get all values from table
+SELECT * FROM table_name;
+
+-- space usage
+col_name VARCHAR(100)
+'Jen' inserted into the col_name uses 3 bytes for the string and 2 bytes for length
+
+
+CREATE TABLE customers(
+    CustomerId INT,
+    FirstName VARCHAR(40),
+    LastName VARCHAR(20),
+    Company VARCHAR(80),
+    Address VARCHAR(70),
+    City VARCHAR(40),
+    State VARCHAR(40),
+    Country VARCHAR(40),
+    PostalCode VARCHAR(10),
+    Phone VARCHAR(24),
+    Fax VARCHAR(24),
+    Email VARCHAR(60),
+    SupportRapid INT
+);
+
+
+Retrieve data SQL SELECT
+SELECT col_name FROM table_name;
+
+SELECT col1_name, col2_name FROM table_name;
+
+SELECT * FROM table_name;
+
+-- think all names from a name col, or all dates of birth etc
+
+-- query col(s) from src table and put results into col(s) of dest table
+INSERT INTO SELECT
+
+INSERT INTO table_dest (col_name_dest)
+SELECT col_name_src
+FROM table_src;
+
+CREATE TABLE stocks (
+    id INT,
+    ticker VARCHAR(5),
+    company_name VARCHAR(100),
+    sector VARCHAR(50),
+    current_price DECIMAL(10, 2)
+);
+
+INSERT INTO stocks (id, ticker, company_name, sector, current_price)
+VALUES
+(1, 'AAPL', 'Apple Inc.', 'Technology', 187.50),
+(2, 'AMZN', 'Amazon.com Inc.', 'Consumer Discretionary', 137.80),
+(3, 'GOOGL', 'Alphabet Inc.', 'Technology', 130.45),
+(4, 'MSFT', 'Microsoft Corp.', 'Technology', 349.75),
+(5, 'TSLA', 'Tesla Inc.', 'Automotive', 245.60);
+
+SELECT * FROM stocks;
++----+--------+-----------------+------------------------+---------------+
+| id | ticker | company_name    | sector                 | current_price |
++----+--------+-----------------+------------------------+---------------+
+|  1 | AAPL   | Apple Inc.      | Technology             |        187.50 |
+|  2 | AMZN   | Amazon.com Inc. | Consumer Discretionary |        137.80 |
+|  3 | GOOGL  | Alphabet Inc.   | Technology             |        130.45 |
+|  4 | MSFT   | Microsoft Corp. | Technology             |        349.75 |
+|  5 | TSLA   | Tesla Inc.      | Automotive             |        245.60 |
++----+--------+-----------------+------------------------+---------------+
+
+SELECT ticker, current_price FROM stocks;
++--------+---------------+
+| ticker | current_price |
++--------+---------------+
+| AAPL   |        187.50 |
+| AMZN   |        137.80 |
+| GOOGL  |        130.45 |
+| MSFT   |        349.75 |
+| TSLA   |        245.60 |
++--------+---------------+
+
+
+
+CREATE TABLE sectors(
+    sector VARCHAR(50)
+);
+
+INSERT INTO sectors(sector) SELECT sector FROM stocks;
+
+SELECT * FROM sectors;
++------------------------+
+| sector                 |
++------------------------+
+| Technology             |
+| Consumer Discretionary |
+| Technology             |
+| Technology             |
+| Automotive             |
++------------------------+
+
+
+
+UPDATE table_name
+SET col1_name = 99, col2_name = 'ball'
+WHERE ID = 3;
+
+
+UPDATE stocks
+SET current_price = 255.99
+WHERE id = 5;
++------+--------+-----------------+------------------------+---------------+
+| id   | ticker | company_name    | sector                 | current_price |
++------+--------+-----------------+------------------------+---------------+
+|    1 | AAPL   | Apple Inc.      | Technology             |        187.50 |
+|    2 | AMZN   | Amazon.com Inc. | Consumer Discretionary |        137.80 |
+|    3 | GOOGL  | Alphabet Inc.   | Technology             |        130.45 |
+|    4 | MSFT   | Microsoft Corp. | Technology             |        349.75 |
+|    5 | TSLA   | Tesla Inc.      | Automotive             |        255.99 |
++------+--------+-----------------+------------------------+---------------+
+
+
+UPDATE stocks
+SET sector = 'Consumer Disc.'
+WHERE sector = 'Consumer Discretionary';
+SELECT * FROM stocks;
++------+--------+-----------------+-----------------+---------------+
+| id   | ticker | company_name    | sector          | current_price |
++------+--------+-----------------+-----------------+---------------+
+|    1 | AAPL   | Apple Inc.      | Technology      |        187.50 |
+|    2 | AMZN   | Amazon.com Inc. | Consumer Disc.  |        137.80 |
+|    3 | GOOGL  | Alphabet Inc.   | Technology      |        130.45 |
+|    4 | MSFT   | Microsoft Corp. | Technology      |        349.75 |
+|    5 | TSLA   | Tesla Inc.      | Automotive      |        255.99 |
++------+--------+-----------------+-----------------+---------------+
+
+-- to change it back
+UPDATE stocks SET sector = 'Consumer Disctionary' WHERE sector = 'Consumer Disc.';
+
+-- update two columns
+UPDATE stocks
+SET sector = 'Consumer Disc.', current_price = 149.01
+WHERE sector = 'Consumer Disctionary';
+ SELECT * FROM stocks;
++------+--------+-----------------+----------------+---------------+
+| id   | ticker | company_name    | sector         | current_price |
++------+--------+-----------------+----------------+---------------+
+|    1 | AAPL   | Apple Inc.      | Technology     |        187.50 |
+|    2 | AMZN   | Amazon.com Inc. | Consumer Disc. |        149.01 |
+|    3 | GOOGL  | Alphabet Inc.   | Technology     |        130.45 |
+|    4 | MSFT   | Microsoft Corp. | Technology     |        349.75 |
+|    5 | TSLA   | Tesla Inc.      | Automotive     |        255.99 |
++------+--------+-----------------+----------------+---------------+
+
+
+DELETE FROM table_name
+WHERE last_name = 'Millar';
+
+
+INSERT INTO stocks (id, ticker, company_name, sector, current_price)
+VALUES (6, 'META', 'Meta Platforms Inc.', 'Technology', 210.11);
++------+--------+---------------------+----------------------+---------------+
+| id   | ticker | company_name        | sector               | current_price |
++------+--------+---------------------+----------------------+---------------+
+|    1 | AAPL   | Apple Inc.          | Technology           |        187.50 |
+|    2 | AMZN   | Amazon.com Inc.     | Consumer Disctionary |        149.01 |
+|    3 | GOOGL  | Alphabet Inc.       | Technology           |        130.45 |
+|    4 | MSFT   | Microsoft Corp.     | Technology           |        349.75 |
+|    5 | TSLA   | Tesla Inc.          | Automotive           |        255.99 |
+|    6 | META   | Meta Platforms Inc. | Technology           |        210.11 |
++------+--------+---------------------+----------------------+---------------+
+
+
+-- delete bottom row / record of table
+DELETE FROM stocks
+WHERE ticker = 'META';
++------+--------+-----------------+----------------------+---------------+
+| id   | ticker | company_name    | sector               | current_price |
++------+--------+-----------------+----------------------+---------------+
+|    1 | AAPL   | Apple Inc.      | Technology           |        187.50 |
+|    2 | AMZN   | Amazon.com Inc. | Consumer Disctionary |        149.01 |
+|    3 | GOOGL  | Alphabet Inc.   | Technology           |        130.45 |
+|    4 | MSFT   | Microsoft Corp. | Technology           |        349.75 |
+|    5 | TSLA   | Tesla Inc.      | Automotive           |        255.99 |
++------+--------+-----------------+----------------------+---------------+
+
+
+-- delete engineering student rows
+DELETE FROM student_tbl
+WHERE department = 'engineering';
+
+-- delete all records from table
+DELETE FROM student_tbl;
+TRUNCATE TABLE student_tbl;
+
+
+
+
+-- insert here doesn't work without join ...
+
+CREATE TABLE transactions (
+    id INT,
+    ticker VARCHAR(10),
+    sector VARCHAR(50) DEFAULT 'unknown',
+    transaction_type VARCHAR(4),
+    quantity INT,
+    transaction_price DECIMAL(10, 2)
+);
+
+INSERT INTO transactions (id, ticker, transaction_type, quantity, transaction_price)
+VALUES
+(1, 'AAPL', 'BUY', 50, 185.00),
+(2, 'AMZN', 'BUY', 10, 135.00),
+(3, 'GOOGL', 'SELL', 15, 132.00),
+(4, 'MSFT', 'BUY', 30, 340.00),
+(5, 'TSLA', 'SELL', 20, 250.00);
+
+SELECT * FROM transactions;
++----+--------+------------------+----------+-------------------+
+| id | ticker | transaction_type | quantity | transaction_price |
++----+--------+------------------+----------+-------------------+
+|  1 | AAPL   | BUY              |       50 |            185.00 |
+|  2 | AMZN   | BUY              |       10 |            135.00 |
+|  3 | GOOGL  | SELL             |       15 |            132.00 |
+|  4 | MSFT   | BUY              |       30 |            340.00 |
+|  5 | TSLA   | SELL             |       20 |            250.00 |
++----+--------+------------------+----------+-------------------+
+
+-- ALTER TABLE transactions DROP sector;
+-- ALTER TABLE transactions MODIFY sector VARCHAR(50);
++----+--------+------------------+----------+-------------------+--------+
+| id | ticker | transaction_type | quantity | transaction_price | sector |
++----+--------+------------------+----------+-------------------+--------+
+|  1 | AAPL   | BUY              |       50 |            185.00 | NULL   |
+|  2 | AMZN   | BUY              |       10 |            135.00 | NULL   |
+|  3 | GOOGL  | SELL             |       15 |            132.00 | NULL   |
+|  4 | MSFT   | BUY              |       30 |            340.00 | NULL   |
+|  5 | TSLA   | SELL             |       20 |            250.00 | NULL   |
++----+--------+------------------+----------+-------------------+--------+
+--
+
+-- add the col to the transactions table
+ALTER TABLE transactions ADD(sector_xfer VARCHAR(50) DEFAULT 'unknown');
+
+INSERT INTO transactions (sector)
+SELECT sector
+FROM stocks;
+
+DELETE FROM transactions WHERE id IS NULL;
+
+
+
+-- change column name
+ALTER TABLE customers RENAME COLUMN name to customerName;
+ALTER TABLE customers RENAME COLUMN address to customerAddress;
