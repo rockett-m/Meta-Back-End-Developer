@@ -1,0 +1,284 @@
+-- arithmetic operators
+
+    + add
+    - sub
+    * mult
+    / div
+    % mod
+
+SELECT col1_name + col1_name FROM table_name;
+
+-- sum is set amount
+SELECT *
+FROM table_name
+WHERE col1_name + col2_name = 15000;
+
+-- evens
+SELECT *
+FROM table_name
+WHERE col1_name % 2 = 0;
+
+-- return sub result
+SELECT col3_name - col2_name
+FROM table_name;
+
+-- simulate tax going up 25%
+SELECT taxes * 1.25
+FROM employee;
+
+-- after increase who has tax < 9000
+SELECT * FROM employee
+WHERE taxes * 2 < 9000;
+
+SELECT (bonus / salary) * 100
+FROM employee;
+
+
+-- add 5000 to employee salaries to see
+SELECT salary + 5000 FROM employee;
+
+-- monthly salary
+SELECT salary / 12 FROM employee;
+
+
+
+-- comparison operators (return true or false)
+    >, <, =, <=, >=
+
+    <> means not equal to like !=
+
+SELECT *
+FROM employee
+WHERE salary = 18000; -- <, <=, >, >=
+
+SELECT *
+FROM employee
+WHERE salary <> 24000;
+
+
+-- Ordering
+
+can sort table by column vals
+    string and numeric
+
+ORDER BY ASC|DESC
+
+
+SELECT col1_name, col2_name, col3_name
+FROM table_name
+ORDER BY ASC;
+
+-- sort all cols descending order
+SELECT *
+FROM table_name
+ORDER BY col1_name, col2_name, col3_name DESC;
+
+SELECT col1_name, col2_name, col3_name
+FROM table_name
+ORDER BY col1_name DESC, col2_name ASC, col3_name DESC;
+
+-- default order is ASC so can omit for col2
+ORDER BY col1_name DESC, col2_name, col3_name DESC;
+
+
+-- show all columns, sort by nationality (a-z), then sort DoB DESC (youngest to oldest)
+SELECT ID, first_name, last_name, date_of_birth, nationality
+FROM student_table
+ORDER BY nationality ASC, date_of_birth DESC;
+
+
+
+-- filtering
+    WHERE
+    BETWEEN
+    LIKE
+
+
+-- between operator equiv to 20000 <= x <= 70000
+SELECT *
+FROM table_name
+WHERE salary BETWEEN 20000 AND 70000;
+
+
+-- between operator equiv to between dates
+SELECT *
+FROM table_name
+WHERE salary BETWEEN '2024-06-01' AND '2024-12-18';
+
+-- pattern match (Jack, Jake, ...)
+SELECT *
+FROM table_name
+WHERE first_name LIKE 'Ja%';
+
+-- see if match within options
+SELECT *
+FROM table_name
+WHERE first_name
+IN ('Alice', 'Bob');
+
+--
+
+Comparison operators (beyond basic ones)
+
+    !=  Checks if the values of two operands are equal or not. If values are not equal, then condition becomes true.
+
+    <>  Checks if the values of two operands are equal or not. If values are not equal, then condition becomes true.
+
+    !<  Checks if the value of the left operand is not less than the value of the right operand. If yes, then condition becomes true.
+
+    !>  Checks if the value of the left operand is not greater than the value of the right operand. If yes, then condition becomes true.
+
+
+Logical operators
+
+    ALL    Used to compare a single value to all the values in another value set.
+
+    AND    Allows for the existence of multiple conditions in an SQL statement's WHERE clause.
+
+    ANY    Used to compare a value to any applicable value in the list as per the condition.
+
+    BETWEEN    Used to search for values that are within a set of values, given the minimum value and the maximum value.
+
+    EXISTS    Used to search for the presence of a row in a specified table that meets a certain criterion.
+
+    IN    Used to compare a value to a list of literal values that have been specified.
+
+    LIKE    Used to compare a value to similar values using wildcard operators.
+
+    NOT    Reverses the meaning of the logical operator with which it is used. For example: NOT EXISTS, NOT BETWEEN, NOT IN, etc. This is a negate operator.
+
+    OR    Used to combine multiple conditions in an SQL statement's WHERE clause.
+
+    IS NULL    Used to compare a value with a NULL value.
+
+    UNIQUE    Searches every row of a specified table for uniqueness (no duplicates).
+
+
+
+SELECT column1, column2, columnN
+FROM table_name
+WHERE [condition1] AND [condition2]...AND [conditionN];
+
+
+SELECT *
+FROM invoices
+WHERE Total > 2 AND BillingCountry = 'USA';
+
+
+SELECT *
+FROM invoices
+WHERE Total > 2 AND (BillingCountry = 'USA' OR BillingCountry = 'France');
+
+
+-- SELECT DISTINCT clause returns distinct values, no duplicates
+
+-- one record per country
+SELECT country
+FROM table_name;
+
+-- on multiple columns, it looks for unique combination (city, country) in this case
+SELECT DISTINCT City, Country
+FROM Customer
+ORDER BY Country, City;
++-----------------------+---------+
+| City                  | Country |
++-----------------------+---------+
+| Rio de Janeiro        | Brazil  |
+| São José dos Campos   | Brazil  |
+| São Paulo             | Brazil  |
+| Edmonton              | Canada  |
+| Vancouver             | Canada  |
++-----------------------+---------+
+
+-- works but Country is first column now
+-- note: structure tables deliberately so left to right it zooms out in scale (geo)
+SELECT DISTINCT Country, City
+FROM Customer
+ORDER BY Country, city;
++---------+-----------------------+
+| Country | City                  |
++---------+-----------------------+
+| Brazil  | Rio de Janeiro        |
+| Brazil  | São José dos Campos   |
+| Brazil  | São Paulo             |
+| Canada  | Edmonton              |
+| Canada  | Vancouver             |
++---------+-----------------------+
+
+INSERT INTO Customer (CustomerId, FirstName, LastName, Company, Address, City, State, Country, PostalCode, Phone, Fax, Email, SupportRepId) VALUES (7, 'asdf', 'lastnamesdf', 'Embraer - Empresa Brasileira de Aeronáutica S.A.', NULL, 'São José dos Campos', 'SP', 'Brazil', '12227-000', '+55 (12) 3923-5555', '+55 (12) 3923-5566', 'luisg@embraer.com.br', 3);
+
+-- avoid NULL vals in output
+-- distinct considers NULL to be a unique value
+SELECT DISTINCT Address, FirstName, LastName
+FROM Customer
+WHERE ADDRESS IS NOT NULL;
+
+
+-- NULL values in columns are considered unique from each other
+-- calling SELECT DISTINCT one one col with multiple NULL vals will show 1 NULL result + unique vals for populated cells
+-- in combinations of col retrievals, NULL + other cols is diff from 'string' + identical vals of other cols
+
+-- when using the SELECT DISTINCT
+== we see dual null addresses
+INSERT INTO Customer (CustomerId, FirstName, LastName, Company, Address, City, State, Country, PostalCode, Phone, Fax, Email, SupportRepId) VALUES (8, 'fn', 'ln', 'asdfEmbraer - Empresa Brasileira de Aeronáutica S.A.', NULL, 'São José dos Campos', 'SP', 'Brazil', '12227-000', '+55 (12) 3923-5555', '+55 (12) 3923-5566', 'ln@embraer.com.br', 3);
+
+SELECT DISTINCT Address, FirstName, LastName
+FROM Customer;
++---------------------------------+-----------+-------------+
+| Address                         | FirstName | LastName    |
++---------------------------------+-----------+-------------+
+| Av. Brigadeiro Faria Lima, 2170 | Luís      | Gonçalves   |
+| Rua Dr. Falcão Filho, 155       | Eduardo   | Martins     |
+| Av. Paulista, 2022              | Alexandre | Rocha       |
+| Praça Pio X, 119                | Roberto   | Almeida     |
+| 8210 111 ST NW                  | Mark      | Philips     |
+| 700 W Pender Street             | Jennifer  | Peterson    |
+| NULL                            | asdf      | lastnamesdf |
+| NULL                            | fn        | ln          |
++---------------------------------+-----------+-------------+
+
+UPDATE Customer
+SET FirstName = 'Luis', LastName = 'lastnamesdf'
+WHERE CustomerId BETWEEN 7 AND 8;
+
+-- now only 1 addr, fname, lname combo (CustomerID 7, 8 have same vals)
+SELECT DISTINCT Address, FirstName, LastName
+FROM Customer;
++---------------------------------+-----------+-------------+
+| Address                         | FirstName | LastName    |
++---------------------------------+-----------+-------------+
+| Av. Brigadeiro Faria Lima, 2170 | Luís      | Gonçalves   |
+| Rua Dr. Falcão Filho, 155       | Eduardo   | Martins     |
+| Av. Paulista, 2022              | Alexandre | Rocha       |
+| Praça Pio X, 119                | Roberto   | Almeida     |
+| 8210 111 ST NW                  | Mark      | Philips     |
+| 700 W Pender Street             | Jennifer  | Peterson    |
+| NULL                            | Luis      | lastnamesdf |
++---------------------------------+-----------+-------------+
+
+
+
+Aggregate functions
+
+    COUNT
+    AVG
+    MAX
+
+-- how many unique combos of those 3 columns exist?
+-- 6 because customer id 7 and 8 share this 3 col combo
+ SELECT COUNT(DISTINCT Address, FirstName, LastName) FROM Customer;
++----------------------------------------------+
+| COUNT(DISTINCT Address, FirstName, LastName) |
++----------------------------------------------+
+|                                            6 |
++----------------------------------------------+
+
+Takeaways
+    When only one column or expression is provided in the DISTINCT clause,
+        the query will return the unique values for that column.
+
+    When more than one column or expression is provided in the DISTINCT clause,
+        the query will retrieve unique combinations for those columns.
+
+    The DISTINCT clause doesn't ignore NULL values in DISTINCT column(s).
+        NULL values are considered as unique values by DISTINCT.
