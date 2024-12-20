@@ -1,0 +1,40 @@
+Task 1: Identify the database’s purpose.
+Chinook db is used to show how a relational database works. It can be used to represent a music store (digital or in person).
+----------------------------------------------------------------
+
+Task 2: Identify 6 main tables with a brief description and a primary key for each table.
+attributes are already listed with datatypes in the Chinook diagram
+----------------------------------------------------------------
+table: PKEY
+----------------------------------------------------------------
+customers: CustomerId
+    people who buy music
+employees: EmployeeId
+    employees who could also be customers and buy music
+    correction: employee(s) supports customers
+invoices: InvoiceId
+    customer orders for music track(s)
+artists: ArtistId
+    singer for album(s)
+albums: AlbumId
+    batches of songs the artist created for sale
+tracks: TrackId
+    tracks are bought and part of invoices, part of albums too
+----------------------------------------------------------------
+
+Task 3: Identify the relationships between the 6 main tables.
+
+1 = 1 and N = many
+
+artists: ArtistId (1:N) albums: ArtistId
+albums: AlbumId   (1:N) tracks: AlbumId
+tracks: TrackId   (1:N) ... (N:N) ... (N:1) invoices: InvoiceId
+customers: CustomerId (1:N) invoices: CustomerId
+employees: EmployeeId (1:N) customers: (fname, lname, addr)
+    suspected composite fkey relationship
+
+----------------------------------------------------------------
+Task 4: Create an entity relationship diagram of the 6 main tables.
+
+remove invoice_items, playlists, playlist_track, media_types, genres
+connect tracks to invoices with a many to many connection symbol
