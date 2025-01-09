@@ -3,6 +3,8 @@
 *.code-workspace
 __pycache__/*
 *.pyc
+venv/
+django-venv/
 
 # tests
 *Knowledge\ Check*

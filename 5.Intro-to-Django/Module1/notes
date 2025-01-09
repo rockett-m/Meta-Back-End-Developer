@@ -1,0 +1,149 @@
+# perform admin tasks
+django-admin
+
+python3 manage.py <command> similar
+python3 manage.py startapp <name of app>
+
+# to init project, creates default proj template
+# begin entire project
+django-admin startproject demoproject
+
+# run for new model declaration
+python3 manage.py makemigrations
+
+# syncronizes the database state with currently declared models and migrations
+python3 manage.py makemigrate
+
+# start django's built-in dev server on 127.0.0.1:8000
+python3 manage.py runserver
+
+# interactive shell
+python3 manage.py shell
+
+# django prefers ipython over standard python shell
+
+# folder to be recognized by python as a package it needs a __init__.py file
+
+# contains info about database config etc.
+settings.py
+
+# default page
+http://127.0.0.1:8000/
+
+
+default port number for MySQL is 3306
+default port number 8000 used with SQLite in Django
+
+# default setting (must be set to False for production environment)
+DEBUG = True
+
+# allowed hosts
+# make the site running on localhost externally visible, you may add
+0.0.0.0:8000
+
+
+# root_urlconf has the projects URL patterns
+
+# static_url for folder of static files like JS code, CSS files images
+# usually set to static/
+
+# manage.py - local version of django-admin.py
+# auto created on proj creation, along with settings.py
+
+# make app inside project
+demoproject/ python3 manage.py startapp demoapp
+
+
+demoproject/ filetree
+demoproject
+│   db.sqlite3
+│   manage.py
+│
+├───demoapp
+│   │   admin.py
+│   │   apps.py
+│   │   models.py
+│   │   tests.py
+│   │   views.py
+│   │   __init__.py
+│   │
+│   └───migrations
+│           __init__.py
+│
+└───demoproject
+    │   asgi.py
+    │   settings.py
+    │   urls.py
+    │   wsgi.py
+    │   __init__.py
+
+
+# matches client request URL with URL pattern from the urls.py file
+
+
+views.py
+presentation layer of the application
+
+web frameworks connect the frontend (user) and backend (server)
+
+
+
+MVT
+Model View Template pattern for app dev
+
+----------------------------
+MVC (Model-View-Controller) arch
+
+client <- req/resp -> controller
+                        |  |
+                        \/ \/
+                    view <-> model <-> database
+
+In the MVC approach, the controller intercepts the user requests.
+
+It coordinates with the view and model layers to send the appropriate response back to the client.
+
+The model is responsible for data definitions, processing logic and interaction with the backend database.
+
+The view is the presentation layer of the application.
+
+It takes care of the placement and formatting of the result and sends it to the controller, which in turn, redirects it to the client as the application's response.
+
+----------------------------
+MVT Architecture
+Model, View and Template (MVT) - Django
+
+                              Model
+                              /
+User <-> Django <-> URL <-> View
+                              \
+                              Template
+
+
+The Django framework adapts a Model, View and Template (MVT) approach, a slight variation of the MVC approach.
+
+Here too, the model is the data layer of the application. The view is, in fact, the layer that undertakes the processing logic.
+
+The template is the presentation layer.
+
+
+A Django application consists of the following components:
+
+    URL dispatcher
+        routes to correct view from pattern matching URL
+
+    View
+        reads path, query, body in clients req
+        CRUD operations if triggered
+
+    Model
+        py class, construct db of matching structure
+
+    Template
+        static HTML and Django Template Language code blocks
+
+
+Presentation tier    |   Application tier    |   Data tier
+client
+                - internet - web server and       database server
+client                      application server
