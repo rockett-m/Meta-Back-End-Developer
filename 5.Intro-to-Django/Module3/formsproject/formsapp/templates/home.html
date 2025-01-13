@@ -1,0 +1,10 @@
+<p>Hello</p>
+
+<!-- <form action = "" method = "post"> -->
+<form action = "" method = "post" style = "background-color: bisque;">
+    {% csrf_token %}
+    <!-- as_p means as paragraph -->
+    {{form.as_p}}
+
+    <input type="submit" value="Submit">
+</form>

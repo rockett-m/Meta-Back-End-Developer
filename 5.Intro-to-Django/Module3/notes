@@ -62,3 +62,603 @@ Database relationships
 1    to many
 many to many
 
+# data integrity is important across (linked) tables
+# goal to not have data redundancy in database
+
+
+1    to    1
+class college(Model):
+    CollegeID = models.IntegerField(primary_key = True)
+    name = models.CharField(max_length=50)
+    strength = models.IntegerField()
+    website=models.URLField()
+
+CASCADE - deletes the object containing the ForeignKey
+PROTECT - prevent deletion of the referenced object
+RESTRICT - prevent deletion of the referenced object by raising RestrictedError
+
+
+class Principal(models.Model):
+    CollegeID = models.OneToOneField(
+                College,
+                on_delete=models.CASCADE
+                )
+    Qualification = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
+
+
+# equivalent SQL command
+CREATE TABLE "myapp_college" (
+    "CollegeID" integer NOT NULL PRIMARY KEY,
+    "name" varchar(50) NOT NULL,
+    "strength" integer NOT NULL,
+    "website" varchar(200) NOT NULL
+);
+
+# equivalent SQL command
+CREATE TABLE "myapp_principal" (
+    "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "Qualification" varchar(50) NOT NULL,
+    "email" varchar(50) NOT NULL,
+    "CollegeID_id" integer NOT NULL UNIQUE REFERENCES "myapp_college" ("CollegeID") DEFERRABLE INITIALLY DEFERRED);
+
+
+1    to    many
+class Subject(models.Model):
+    Subjectcode = models.IntegerField(primary_key = True)
+    name = models.CharField(max_length=30)
+    credits = model.IntegerField()
+
+class Teacher(models.Model):
+    TeacherID = models.IntegerField(primary_key=True)
+    subjectcode=models.ForeignKey(
+                Subject,
+                on_delete=models.CASCADE
+                  )
+    Qualification = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
+
+# running migration executes these SQL queries
+CREATE TABLE "myapp_subject" (
+    "Subjectcode" integer NOT NULL PRIMARY KEY,
+    "name" varchar(30) NOT NULL,
+    "credits" integer NOT NULL,
+    "Qualification" varchar(50) NOT NULL,
+    "email" varchar(50) NOT NULL
+);
+
+CREATE TABLE "myapp_teacher" (
+    "TeacherID" integer NOT NULL PRIMARY KEY,
+    "Qualification" varchar(50) NOT NULL,
+    "email" varchar(50) NOT NULL,
+    "subjectcode_id" integer NOT NULL REFERENCES "myapp_subject" ("Subjectcode") DEFERRABLE INITIALLY DEFERRED);
+
+CREATE INDEX "myapp_teacher_subjectcode_id_bef86dea"
+ON "myapp_teacher" ("subjectcode_id");
+
+
+
+many   to    many
+class Teacher(models.Model):
+    TeacherID = models.IntegerField(primary_key=True)
+    Qualification = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
+
+class Subject(models.Model):
+    Subjectcode = models.IntegerField(primary_key = True)
+    name = models.CharField(max_length=30)
+    credits = model.IntegerField()
+    teacher = model.ManyToManyField(Teacher)
+
+# SQL corresponding code
+CREATE TABLE "myapp_teacher" (
+    "TeacherID" integer NOT NULL PRIMARY KEY,
+    "Qualification" varchar(50) NOT NULL,
+    "email" varchar(50) NOT NULL
+);
+
+CREATE TABLE "myapp_subject" (
+    "Subjectcode" integer NOT NULL PRIMARY KEY,
+    "name" varchar(30) NOT NULL,
+    "credits" integer NOT NULL
+);
+
+CREATE TABLE "myapp_subject_teacher" (
+    "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "subject_id" integer NOT NULL REFERENCES "myapp_subject" ("Subjectcode") DEFERRABLE INITIALLY DEFERRED,
+    "teacher_id" integer NOT NULL REFERENCES "myapp_teacher" ("TeacherID") DEFERRABLE INITIALLY DEFERRED
+);
+
+CREATE UNIQUE INDEX "myapp_subject_teacher_subject_id_teacher_id_9b6a3c00_uniq"
+ON "myapp_subject_teacher" ("subject_id", "teacher_id");
+
+CREATE INDEX "myapp_subject_teacher_subject_id_e87c76e7"
+ON "myapp_subject_teacher" ("subject_id");
+
+CREATE INDEX "myapp_subject_teacher_teacher_id_359f8cce"
+ON "myapp_subject_teacher" ("teacher_id");
+
+
+# Object Relational Mapper
+model to database mapper
+
+
+
+if you add a attribute to a model, just run
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+equivalent to SQL ALTER TABLE, add new column
+
+# create migration script
+# apply the migrations
+
+
+makemigrations
+migrate
+sqlmigrate
+showmigrations
+
+from django.db import migrations, models
+
+
+python3 manage.py makemigrations newapp
+python3 manage.py showmigrations newapp
+python3 manage.py migrate newapp
+
+# shows the SQL query/queries executed for a migration script
+python3 manage.py sqlmigrate
+
+
+
+[X] means migrated already
+[ ] means not migrated
+
+
+python3 manage.py sqlmigrate myapp 0003
+
+
+0001_initial.py
+- dependencies = operations that have to be applied before running migration
+- operations - actions performed in the given migration
+
+
+CreateModel
+DeleteModel
+AddField
+AlterField
+
+# import a model
+from .models import Drinks
+
+
+
+
+
+# Query Set
+from django.db import models
+class Customer(models.Model):
+    name = models.CharField(max_length=255)
+
+class Vehicle(models.Model):
+    name = models.CharField(max_length=255)
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        related_name='Vehicle'
+    )
+
+python3 manage.py shell
+
+>>> from demoapp.models import Customer
+>>> c=Customer(name="Henry")
+>>> c.save()
+
+Customer.objects.create(name="Hameed")
+
+>>> from demoapp.models import Customer, Vehicle
+>>> c=Customer.objects.get(pk=2)
+>>> c.name
+'Hameed'
+
+>>> Customer.objects.create(name="Hameed")
+<Customer: Customer object (2)>
+
+>>> c=Customer.objects.get(name="Henry")
+>>> Vehicle.objects.create(name="Ford", customer=c)
+<Vehicle: Vehicle object (3)>
+>>> Vehicle.objects.create(name="Nissan", customer=c)
+<Vehicle: Vehicle object (4)>
+
+
+# equivalent to a SELECT query
+# model.objects.all()
+# returns a list of objects
+>> lst=Customer.objects.all()
+>>> [c.name for c in lst]
+['Henry', 'Hameed']
+
+# filter is similar to a WHERE clause
+mydata = Customer.objects.filter(name__startswith='H')
+
+
+# Vehicle contains 'Honda', 'Ford', 'Toyota'
+>>> avehicles = Vehicle.objects.filter(name__endswith='a')
+>>> [v.name for v in avehicles]
+['Honda', 'Toyota']
+
+# case-insensitive letter search
+>>> fvehicles = Vehicle.objects.filter(name__contains='f')
+>>> [f.name for f in fvehicles]
+['Ford']
+
+
+# all objects of the Vehicle model
+>>> lst=Vehicle.objects.all()
+>>> for v in lst:
+...     print(v.name, " : ", v.customer.name)
+...
+Honda  :  Hameed
+Toyota  :  Hameed
+Ford  :  Henry
+Nissan  :  Henry
+
+# change a customer's name
+c=Customer.objects.get(name="Henry")
+
+
+>>> [print(c.name) for c in Customer.objects.all()]
+Helen
+Hameed
+[None, None]
+
+
+# remove the row corresponding to the model's mapped table
+>>> c=Customer.objects.get(pk=2)
+>>> c.name
+'Hameed'
+>>> c.delete()
+(3, {'demoapp.Vehicle': 2, 'demoapp.Customer': 1})
+
+
+
+# SQL
+SELECT * FROM Customer WHERE seats = 4;
+# QuerySet API
+Customer.objects.filter(seats=4)
+
+
+
+
+
+
+
+# ormproject/demoapp/models.py
+from django.db import models
+
+# Create your models here.
+class Customer(models.Model):
+    name = models.CharField(max_length=255)
+    reservation_day = models.CharField(max_length=20)
+    seats = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+
+# ormproject/demoapp/migrations/0002_customer_reservation_day_customer_seats.py
+# Generated by Django 5.1.4 on 2025-01-12 18:01
+
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ("demoapp", "0001_initial"),
+    ]
+
+    operations = [
+        migrations.AddField(
+            model_name="customer",
+            name="reservation_day",
+            field=models.CharField(default='Monday', max_length=20),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name="customer",
+            name="seats",
+            field=models.IntegerField(default=0),
+            preserve_default=False,
+        ),
+    ]
+
+python3 manage.py makemigrations
+
+python3 manage.py shell
+>>> from demoapp.models import Customer
+>>> Customer.objects.get(id=1)
+
+
+
+>>> Customer.objects.filter(reservation_day="Saturday")
+<QuerySet []>
+
+>>> Customer.objects.filter(reservation_day="Monday")
+<QuerySet [<Customer: Helen>]>
+
+>>> Customer.objects.filter(seats=4)
+<QuerySet []>
+>>> Customer.objects.filter(seats=0)
+<QuerySet [<Customer: Helen>]>
+
+
+# can chain commands together like pipe in shell
+>>> Customer.objects.filter(reservation_day="Monday") & Customer.objects.filter(seats=0)
+<QuerySet [<Customer: Helen>]>
+
+
+# Forms ...
+App <- Model -> Database
+
+forms.py
+from django import forms
+class userForm(ModelForm):
+    class Meta:
+        model = Booking
+        fields = "__all__"
+
+good to have structured input for ease of parsing
+
+CharField, EmailField, IntegerField, MultipleChoiceField, FileField
+
+# keywords
+from django import forms
+class MyForm(forms.Form):
+    name = forms.CharField(required=False, label='Your name', initial='Enter your name')
+    age = forms.IntegerField()
+
+
+
+
+# field common properties
+primary_key={False,True} # default False
+default= # could be integer or string etc
+unique={False,True}
+choices # set this to a list of two-item tuples
+# if you want the user to select from a drop-down menu
+SEMESTER_CHOICES = (
+    ("1", "Civil"),
+    ("2", "Electrical"),
+    ("3", "Mechanical"),
+    ("4", "CompSci"),
+)
+# declaring a Student Model
+class Student(models.Model):
+      semester = models.CharField(
+        max_length = 20,
+        choices = SEMESTER_CHOICES,
+        default = '1'
+        )
+
+# field types
+CharField # max_length like VARCHAR specifier
+    TextField # for longer data like TEXT, MEDIUMTEXT in SQL
+IntegerField # -2147483648 to 2147483647
+    BigIntegerField
+    SmallIntegerField
+    AutoField
+FloatField
+    DecimalField # fixed digits for the fractional part
+DateTimeField # stores using python's datetime.datetime class
+    DateField # stores datetime.date value
+EmailField # CharField actually with built-in email validation
+FileField # save file uploaded by user to path spec. by 'upload_to' param
+ImageField # variant of FileField, validate if uploaded file is image
+URLField # CharField with URL validation built-in
+
+# relationships
+one-to-one, one-to-many, many-to-many
+
+ForeignKey
+    make a one-to-many relationship between two models
+    args:
+        model related
+        'on_delete' option for behavior of delete
+            CASCADE: deletes the object containing the ForeignKey
+                aka delete both
+                if a customer is deleted, their vehicle(s) will be deleted too
+                assuming they reference the customer
+            PROTECT: Prevent deletion of the referenced object
+                opposite of cascade
+                cant delete a customer if they have referenced vehicles
+                forceful delete raises ProtectedError in Django
+            RESTRICT: Prevent deletion of the referenced object by raising RestrictedError
+                like PROTECT but when you delete the referenced object,
+                'on_delete' raises the RestrictedError
+
+# customer can have multiple vehicles
+class Customer(models.Model):
+    name = models.CharField(max_length=255)
+
+class Vehicle(models.Model):
+    name = models.CharField(max_length=255)
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        related_name='Vehicle'
+    )
+
+# for float field
+class Student(models.Model):
+    grade = models.DecimalField(
+                max_digits = 5,
+                decimal_places = 2)
+
+# on_delete behavior
+class Artist(models.Model):
+    name = models.CharField(max_length=10)
+
+class Album(models.Model):
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+
+class Song(models.Model):
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    album = models.ForeignKey(Album, on_delete=models.RESTRICT)
+
+
+# You can safely delete the artist1 instance.
+# If you try to delete artist2, the RestrictedError is raised.
+# the song protects the artist2 from being deleted due to its properties and album linkage
+>>> artist1 = Artist.objects.create(name='Danny')
+>>> artist2 = Artist.objects.create(name='John')
+>>> album1 = Album.objects.create(artist=artist1)
+>>> album2 = Album.objects.create(artist=artist2)
+>>> song1 = Song.objects.create(artist=artist1, album=album1)
+>>> song2 = Song.objects.create(artist=artist1, album=album2)
+
+# OneToOne relationship
+# college can have only 1 principal and
+# principal can only be principal of 1 college
+class college(Model):
+    CollegeID = models.IntegerField(primary_key = True)
+    name = models.CharField(max_length=50)
+    strength = models.IntegerField()
+    website=models.URLField()
+
+class Principal(models.Model):
+    CollegeID = models.OneToOneField(
+                College,
+                on_delete=models.CASCADE
+                )
+    Qualification = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
+
+# ManyToMany relationship
+# subject and teacher - several teachers can teach a subject and
+# teachers can teach several subjects each
+class Teacher(models.Model):
+    TeacherID = models.ItegerField(primary_key=True)
+    Qualification = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
+
+class Subject(models.Model):
+    Subjectcode = models.IntegerField(primary_key = True)
+    name = models.CharField(max_length=30)
+    credits = model.IntegerField()
+    teacher = model.ManyToManyField(Teacher)
+
+
+# HTML form
+<form action="/form/" method="POST">
+    <label for="Name">Name of Applicant</label>
+    <input type="text" id="name" name="name">
+
+    <label for="Address">Address</label>
+    <input type="text" id="add" name="add">
+
+    <label for="Post">Post</label>
+    <select id="Post" name="Post">
+      <option value="Manager">Manager</option>
+      <option value="Cashier">Cashier</option>
+      <option value="Operator">Operator</option>
+    </select>
+
+    <input type="submit" value="Submit">
+</form>
+# you should use JavaScript to validate HTML to be safe before submitting to server
+
+# Django Form
+# most basic form:
+from django import forms
+
+class ApplicationForm(forms.Form):
+   pass
+
+# application form
+class ApplicationForm(forms.Form):
+    name = forms.CharField(label='Name of Applicant', max_length=50)
+    address = forms.CharField(label='Address', max_length=100)
+    posts = (('Manager', 'Manager'),('Cashier', 'Cashier'),('Operator', 'Operator'))
+    field = forms.ChoiceField(choices=posts)
+
+# forms.py stored in app folder so  .../myproject/myapp/forms.py
+# can specify int range
+name = forms.CharField(label="Enter first name",max_length=50)
+age = forms.IntegerField(min_value=20, max_value=60)
+price = forms.FloatField()
+upload = forms.FileField(upload_to ='uploads/')
+email = forms.EmailField(max_length = 254)
+gender = forms.CharField(max_length=1, choices=GENDER_CHOICES)
+
+>>> from myapp import forms
+>>> f = ApplicationForm()
+>>> print(f)
+
+# yields
+<tr>
+    <th><label for="id_name">Name of Applicant:</label></th>
+    <td>
+
+        <input type="text" name="name" maxlength="50" required id="id_name">
+
+    </td>
+</tr>
+<tr>
+    <th><label for="id_address">Address:</label></th>
+    <td>
+        <input type="text" name="address" maxlength="100" required id="id_address">
+
+    </td>
+</tr>
+<tr>
+    <th><label for="id_field">Field:</label></th>
+    <td>
+        <select name="field" id="id_field">
+            <option value="Manager">Manager</option>
+            <option value="Cashier">Cashier</option>
+            <option value="Operator">Operator</option>
+        </select>
+    </td>
+</tr>
+
+
+
+
+# Superuser mode and django admin
+# User creation
+django-admin manage.py createsuperuser
+User
+Password
+repeat pw
+Email
+
+settings.py
+INSTALLED_APPS = [
+    'django.contrib.admin', ...
+]
+
+Modify Groups, Users, Reservations
+
+>>> from django.contrib.auth.models import User
+>>> User.objects.filter(is_superuser=True).delete()
+
+sqlite3.OperationalError: no such table: auth_user
+rm db.sqlite3
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py createsuperuser
+
+# login
+http://127.0.0.1:8000/admin/
+# then can create groups, users, permissions etc.
+
+
+if user's
+    is_staff=True
+it can log in to the admin interface
+
+** user admin has no real restrictions ** be aware
+
+
+
